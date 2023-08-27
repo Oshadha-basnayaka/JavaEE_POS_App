@@ -13,7 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@WebServlet
+@WebServlet (urlPatterns = {"/pages/customer"})
 public class CustomerServletAPI extends HttpServlet {
 
 
