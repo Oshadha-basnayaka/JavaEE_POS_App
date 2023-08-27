@@ -1,4 +1,6 @@
 package lk.ijse.jsp.pos.servlet;
 
-public class PurchaseOrderServletAPI {
+import javax.servlet.http.HttpServlet;
+
+public class PurchaseOrderServletAPI extends HttpServlet {
 }
