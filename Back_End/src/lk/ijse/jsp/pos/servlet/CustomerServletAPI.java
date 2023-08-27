@@ -1,4 +1,5 @@
 package lk.ijse.jsp.pos.servlet;
+
 import lk.ijse.jsp.pos.servlet.util.DBConnection;
 
 import javax.servlet.ServletException;
@@ -13,13 +14,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@WebServlet (urlPatterns = {"/pages/customer"})
+@WebServlet(urlPatterns = {"/pages/customer"})
 public class CustomerServletAPI extends HttpServlet {
 
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try{
+        try {
 
             resp.addHeader("Access-Control-Allow-Origin", "*");
 
@@ -44,8 +45,6 @@ public class CustomerServletAPI extends HttpServlet {
             resp.getWriter().print(allCustomers.build());
 
 
-
-
         } catch (ClassNotFoundException e) {
             showMessage(resp, e.getMessage(), "error", "[]");
             resp.setStatus(500);
@@ -68,7 +67,7 @@ public class CustomerServletAPI extends HttpServlet {
         resp.addHeader("Access-Control-Allow-Origin", "*");
 
 
-        try{
+        try {
             Connection connection = DBConnection.getDBConnection().getConnection();
             PreparedStatement pstm = connection.prepareStatement("insert into customer values(?,?,?)");
 
@@ -84,7 +83,7 @@ public class CustomerServletAPI extends HttpServlet {
                 resp.setStatus(400);
             }
 
-        }catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             showMessage(resp, e.getMessage(), "error", "[]");
             resp.setStatus(500);
 
@@ -171,7 +170,6 @@ public class CustomerServletAPI extends HttpServlet {
         response.add("data", data);
         resp.getWriter().print(response.build());
     }
-
 
 
     @Override
