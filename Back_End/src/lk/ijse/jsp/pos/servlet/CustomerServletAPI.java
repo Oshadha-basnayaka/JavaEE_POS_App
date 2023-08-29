@@ -1,7 +1,5 @@
 package lk.ijse.jsp.pos.servlet;
 
-import lk.ijse.jsp.pos.servlet.util.DBConnection;
-
 import javax.servlet.ServletException;
 import javax.json.*;
 import javax.servlet.annotation.WebServlet;
@@ -9,10 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 @WebServlet(urlPatterns = {"/pages/customer"})
 public class CustomerServletAPI extends HttpServlet {
@@ -24,7 +19,8 @@ public class CustomerServletAPI extends HttpServlet {
 
             resp.addHeader("Access-Control-Allow-Origin", "*");
 
-            Connection connection = DBConnection.getDBConnection().getConnection();
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/testdb?useSSL=false", "root", "1234");
             PreparedStatement pstm = connection.prepareStatement("select * from customer");
             ResultSet rst = pstm.executeQuery();
 
@@ -68,7 +64,8 @@ public class CustomerServletAPI extends HttpServlet {
 
 
         try {
-            Connection connection = DBConnection.getDBConnection().getConnection();
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/testdb?useSSL=false", "root", "1234");
             PreparedStatement pstm = connection.prepareStatement("insert into customer values(?,?,?)");
 
             pstm.setObject(1, cusID);
@@ -107,7 +104,10 @@ public class CustomerServletAPI extends HttpServlet {
         resp.addHeader("Content-Type", "application/json");
         resp.addHeader("Access-Control-Allow-Origin", "*");
         try {
-            Connection connection = DBConnection.getDBConnection().getConnection();
+
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/testdb?useSSL=false", "root", "1234");
             PreparedStatement pstm3 = connection.prepareStatement("update customer set cusName=?,cusAddress=? where cusID=?");
 
             pstm3.setObject(3, cusID);
@@ -141,7 +141,8 @@ public class CustomerServletAPI extends HttpServlet {
         resp.addHeader("Access-Control-Allow-Origin", "*");
 
         try {
-            Connection connection = DBConnection.getDBConnection().getConnection();
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/testdb?useSSL=false", "root", "1234");
             PreparedStatement pstm = connection.prepareStatement("delete from customer where cusID=?");
             pstm.setObject(1, cusID);
 

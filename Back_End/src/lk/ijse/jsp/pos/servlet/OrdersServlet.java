@@ -1,7 +1,5 @@
 package lk.ijse.jsp.pos.servlet;
 
-import lk.ijse.jsp.pos.servlet.util.DBConnection;
-
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
@@ -11,10 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 @WebServlet(urlPatterns = {"/pages/orders"})
 public class OrdersServlet extends HttpServlet {
@@ -24,7 +19,8 @@ public class OrdersServlet extends HttpServlet {
        try {
            resp.addHeader("Access-Control-Allow-Origin", "*");
 
-           Connection connection = DBConnection.getDBConnection().getConnection();
+           Class.forName("com.mysql.cj.jdbc.Driver");
+           Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/testdb?useSSL=false", "root", "1234");
            PreparedStatement pstm = connection.prepareStatement("SELECT\n" +
                    "    o.orderID,\n" +
                    "    o.date,\n" +

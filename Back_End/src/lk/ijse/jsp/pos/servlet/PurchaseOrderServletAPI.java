@@ -1,7 +1,5 @@
 package lk.ijse.jsp.pos.servlet;
 
-import lk.ijse.jsp.pos.servlet.util.DBConnection;
-
 import javax.json.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -59,7 +58,8 @@ public class PurchaseOrderServletAPI extends HttpServlet {
 
 
         try {
-            Connection connection = DBConnection.getDBConnection().getConnection();
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/testdb?useSSL=false", "root", "1234");
             connection.setAutoCommit(false);
 
             PreparedStatement pstm2 = connection.prepareStatement("insert into orders (orderID, date, customerID, discount, total)\n" +

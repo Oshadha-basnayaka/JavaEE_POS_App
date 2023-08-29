@@ -1,3 +1,4 @@
+console.log("hi")
 let baseUrl = 'http://localhost:8080/backEnd/pages/';
 
 getAllCustomers();
