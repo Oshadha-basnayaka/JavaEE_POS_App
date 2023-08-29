@@ -24,23 +24,25 @@ public class ItemServletAPI extends HttpServlet {
             resp.addHeader("Access-Control-Allow-Origin", "*");
 
             Connection connection = DBConnection.getDBConnection().getConnection();
-            PreparedStatement pstm = connection.prepareStatement("select * from customer");
+            PreparedStatement pstm = connection.prepareStatement("select * from item");
             ResultSet rst = pstm.executeQuery();
 
-            JsonArrayBuilder allCustomers = Json.createArrayBuilder();
+            JsonArrayBuilder allItems = Json.createArrayBuilder();
             while (rst.next()) {
-                String id = rst.getString(1);
-                String name = rst.getString(2);
-                String address = rst.getString(3);
+                String code = rst.getString(1);
+                String itemName = rst.getString(2);
+                int qty = rst.getInt(3);
+                double unitPrice = rst.getDouble(4);
 
-                JsonObjectBuilder customerObject = Json.createObjectBuilder();
-                customerObject.add("id", id);
-                customerObject.add("name", name);
-                customerObject.add("address", address);
-                allCustomers.add(customerObject.build());
+                JsonObjectBuilder itemObject = Json.createObjectBuilder();
+                itemObject.add("code", code);
+                itemObject.add("itemName", itemName);
+                itemObject.add("qty", qty);
+                itemObject.add("unitPrice", unitPrice);
+                allItems.add(itemObject.build());
             }
 
-            resp.getWriter().print(allCustomers.build());
+            resp.getWriter().print(allItems.build());
 
         }catch (ClassNotFoundException e) {
             showMessage(resp, e.getMessage(), "error", "[]");
@@ -56,22 +58,24 @@ public class ItemServletAPI extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String cusID = req.getParameter("cusID");
-        String cusName = req.getParameter("cusName");
-        String cusAddress = req.getParameter("cusAddress");
+        String code = req.getParameter("code");
+        String itemName = req.getParameter("description");
+        String qty = req.getParameter("qty");
+        String unitPrice = req.getParameter("unitPrice");
 
         resp.addHeader("Content-Type", "application/json");
         resp.addHeader("Access-Control-Allow-Origin", "*");
         try {
             Connection connection = DBConnection.getDBConnection().getConnection();
-            PreparedStatement pstm = connection.prepareStatement("insert into customer values(?,?,?)");
+            PreparedStatement pstm = connection.prepareStatement("insert into customer values(?,?,?,?)");
 
-            pstm.setObject(1, cusID);
-            pstm.setObject(2, cusName);
-            pstm.setObject(3, cusAddress);
+            pstm.setObject(1, code);
+            pstm.setObject(2, itemName);
+            pstm.setObject(3, qty);
+            pstm.setObject(4, unitPrice);
 
             if (pstm.executeUpdate() > 0) {
-                showMessage(resp, cusID + " Successfully Added..!", "ok", "[]");
+                showMessage(resp, code + " Successfully Added..!", "ok", "[]");
                 resp.setStatus(200);
             } else {
                 showMessage(resp, "Wrong data", "error", "[]");
@@ -94,25 +98,27 @@ public class ItemServletAPI extends HttpServlet {
         JsonReader reader = Json.createReader(req.getReader());
         JsonObject jsonObject = reader.readObject();
 
-        String cusID = jsonObject.getString("cusID");
-        String cusName = jsonObject.getString("cusName");
-        String cusAddress = jsonObject.getString("cusAddress");
+        String code = jsonObject.getString("code");
+        String itemName = jsonObject.getString("itemName");
+        String qty = jsonObject.getString("qty");
+        String unitPrice = jsonObject.getString("unitPrice");
 
         resp.addHeader("Content-Type", "application/json");
         resp.addHeader("Access-Control-Allow-Origin", "*");
         try {
             Connection connection = DBConnection.getDBConnection().getConnection();
-            PreparedStatement pstm3 = connection.prepareStatement("update customer set cusName=?,cusAddress=? where cusID=?");
+            PreparedStatement pstm3 = connection.prepareStatement("update Item set itemName=?,qty=?,unitPrice=? where code=?");
 
-            pstm3.setObject(3, cusID);
-            pstm3.setObject(1, cusName);
-            pstm3.setObject(2, cusAddress);
+            pstm3.setObject(1, itemName);
+            pstm3.setObject(2, qty);
+            pstm3.setObject(3, unitPrice);
+            pstm3.setObject(4, code);
 
             if (pstm3.executeUpdate() > 0) {
-                showMessage(resp, cusID + " Customer Updated..!", "ok", "[]");
+                showMessage(resp, code + " Item Updated..!", "ok", "[]");
                 resp.setStatus(200);
             } else {
-                showMessage(resp, cusID + " Customer is not exist..!", "error", "[]");
+                showMessage(resp, code + " item is not exist..!", "error", "[]");
                 resp.setStatus(400);
             }
 
@@ -129,20 +135,20 @@ public class ItemServletAPI extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String cusID = req.getParameter("cusID");
+        String code = req.getParameter("code");
         resp.addHeader("Content-type", "application/json");
         resp.addHeader("Access-Control-Allow-Origin", "*");
 
         try {
             Connection connection = DBConnection.getDBConnection().getConnection();
-            PreparedStatement pstm = connection.prepareStatement("delete from customer where cusID=?");
-            pstm.setObject(1, cusID);
+            PreparedStatement pstm = connection.prepareStatement("delete from item where code=?");
+            pstm.setObject(1, code);
 
             if (pstm.executeUpdate() > 0) {
-                showMessage(resp, cusID + " Customer Deleted..!", "ok", "[]");
+                showMessage(resp, code + " Item Deleted..!", "ok", "[]");
                 resp.setStatus(200);
             } else {
-                showMessage(resp, "Customer with ID " + cusID + " not found.", "error", "[]");
+                showMessage(resp, "Item with ID " + code + " not found.", "error", "[]");
                 resp.setStatus(400);
             }
 
