@@ -1,5 +1,5 @@
 console.log("hi")
-let baseUrl = 'http://localhost:8080/backEnd/pages/';
+let baseUrl = 'http://localhost:8080/app/pages/';
 
 getAllCustomers();
 bindRowClickEvents();
